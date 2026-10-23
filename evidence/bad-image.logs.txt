@@ -1,0 +1,1 @@
+Error from server (BadRequest): previous terminated container "web" in pod "bad-image" not found

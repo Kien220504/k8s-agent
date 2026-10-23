@@ -1,0 +1,40 @@
+LAST SEEN   TYPE      REASON                    OBJECT                    MESSAGE
+48m         Normal    Starting                  node/kind-control-plane   Starting kubelet.
+48m         Normal    NodeHasSufficientMemory   node/kind-control-plane   Node kind-control-plane status is now: NodeHasSufficientMemory
+47m         Normal    NodeHasNoDiskPressure     node/kind-control-plane   Node kind-control-plane status is now: NodeHasNoDiskPressure
+47m         Normal    Starting                  node/kind-control-plane   Starting kubelet.
+48m         Normal    NodeAllocatableEnforced   node/kind-control-plane   Updated Node Allocatable limit across pods
+48m         Normal    NodeHasSufficientPID      node/kind-control-plane   Node kind-control-plane status is now: NodeHasSufficientPID
+48m         Normal    NodeHasNoDiskPressure     node/kind-control-plane   Node kind-control-plane status is now: NodeHasNoDiskPressure
+47m         Normal    NodeHasSufficientMemory   node/kind-control-plane   Node kind-control-plane status is now: NodeHasSufficientMemory
+47m         Normal    NodeAllocatableEnforced   node/kind-control-plane   Updated Node Allocatable limit across pods
+47m         Normal    NodeHasSufficientPID      node/kind-control-plane   Node kind-control-plane status is now: NodeHasSufficientPID
+47m         Normal    RegisteredNode            node/kind-control-plane   Node kind-control-plane event: Registered Node kind-control-plane in Controller
+47m         Normal    Starting                  node/kind-control-plane   
+47m         Normal    NodeReady                 node/kind-control-plane   Node kind-control-plane status is now: NodeReady
+29m         Normal    Pulling                   pod/crash-loop            Pulling image "busybox:1.36"
+29m         Normal    Scheduled                 pod/crash-loop            Successfully assigned default/crash-loop to kind-control-plane
+29m         Normal    Scheduled                 pod/oom-demo              Successfully assigned default/oom-demo to kind-control-plane
+29m         Normal    Scheduled                 pod/bad-image             Successfully assigned default/bad-image to kind-control-plane
+4m22s       Warning   FailedScheduling          pod/pending-demo          0/1 nodes are available: 1 Insufficient cpu. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+23m         Normal    Pulling                   pod/bad-image             Pulling image "nginx:tag-nonexistence"
+2m48s       Normal    Pulling                   pod/oom-demo              Pulling image "polinux/stress"
+13m         Normal    Started                   pod/crash-loop            Container started
+13m         Normal    Created                   pod/crash-loop            Container created
+29m         Normal    Pulled                    pod/crash-loop            Successfully pulled image "busybox:1.36" in 4.168s (4.168s including waiting). Image size: 2217006 bytes.
+26m         Warning   Failed                    pod/bad-image             Failed to pull image "nginx:tag-nonexistence": rpc error: code = NotFound desc = failed to pull and unpack image "docker.io/library/nginx:tag-nonexistence": failed to resolve reference "docker.io/library/nginx:tag-nonexistence": docker.io/library/nginx:tag-nonexistence: not found
+3m27s       Normal    Pulled                    pod/crash-loop            Container image "busybox:1.36" already present on machine and can be accessed by the pod
+4m22s       Warning   Failed                    pod/bad-image             Error: ImagePullBackOff
+4m22s       Normal    BackOff                   pod/bad-image             Back-off pulling image "nginx:tag-nonexistence"
+26m         Warning   Failed                    pod/bad-image             Error: ErrImagePull
+60s         Warning   BackOff                   pod/crash-loop            Back-off restarting failed container app in pod crash-loop_default(1ca67933-16e0-4dea-8017-8039890e1646)
+29m         Normal    Pulled                    pod/oom-demo              Successfully pulled image "polinux/stress" in 4.506s (9.662s including waiting). Image size: 4041495 bytes.
+26m         Normal    Started                   pod/oom-demo              Container started
+26m         Normal    Created                   pod/oom-demo              Container created
+29m         Normal    Pulled                    pod/oom-demo              Successfully pulled image "polinux/stress" in 1.233s (1.233s including waiting). Image size: 4041495 bytes.
+77s         Warning   BackOff                   pod/oom-demo              Back-off restarting failed container memory-hog in pod oom-demo_default(625b202a-c944-4696-a476-2bca0f40d24a)
+29m         Normal    Pulled                    pod/oom-demo              Successfully pulled image "polinux/stress" in 1.269s (1.269s including waiting). Image size: 4041495 bytes.
+28m         Normal    Pulled                    pod/oom-demo              Successfully pulled image "polinux/stress" in 1.285s (1.286s including waiting). Image size: 4041495 bytes.
+27m         Normal    Pulled                    pod/oom-demo              Successfully pulled image "polinux/stress" in 1.24s (1.24s including waiting). Image size: 4041495 bytes.
+26m         Normal    Pulled                    pod/oom-demo              Successfully pulled image "polinux/stress" in 1.294s (1.294s including waiting). Image size: 4041495 bytes.
+23m         Normal    Pulled                    pod/oom-demo              Successfully pulled image "polinux/stress" in 1.282s (1.282s including waiting). Image size: 4041495 bytes.

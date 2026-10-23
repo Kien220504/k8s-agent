@@ -1,0 +1,80 @@
+Name:             oom-demo
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             kind-control-plane/172.18.0.2
+Start Time:       Fri, 23 Oct 2026 13:54:23 +0000
+Labels:           <none>
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.7
+IPs:
+  IP:  10.244.0.7
+Containers:
+  memory-hog:
+    Container ID:  containerd://25056497272fe72d9298db9cddc77c5b8c34c4726cf8c45b14e2f93481eced45
+    Image:         polinux/stress
+    Image ID:      docker.io/polinux/stress@sha256:b6144f84f9c15dac80deb48d3a646b55c7043ab1d83ea0a697c09097aaad21aa
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      stress
+    Args:
+      --vm
+      1
+      --vm-bytes
+      250M
+      --vm-hang
+      1
+    State:          Terminated
+      Reason:       OOMKilled
+      Exit Code:    137
+      Started:      Fri, 23 Oct 2026 14:21:06 +0000
+      Finished:     Fri, 23 Oct 2026 14:21:06 +0000
+    Last State:     Terminated
+      Reason:       OOMKilled
+      Exit Code:    137
+      Started:      Fri, 23 Oct 2026 14:16:00 +0000
+      Finished:     Fri, 23 Oct 2026 14:16:00 +0000
+    Ready:          False
+    Restart Count:  10
+    Limits:
+      memory:  100Mi
+    Requests:
+      memory:     100Mi
+    Environment:  <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-zhgll (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-zhgll:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                 From               Message
+  ----     ------     ----                ----               -------
+  Normal   Scheduled  28m                 default-scheduler  Successfully assigned default/oom-demo to kind-control-plane
+  Normal   Pulled     27m                 kubelet            spec.containers{memory-hog}: Successfully pulled image "polinux/stress" in 4.506s (9.662s including waiting). Image size: 4041495 bytes.
+  Normal   Pulled     27m                 kubelet            spec.containers{memory-hog}: Successfully pulled image "polinux/stress" in 1.233s (1.233s including waiting). Image size: 4041495 bytes.
+  Normal   Pulled     27m                 kubelet            spec.containers{memory-hog}: Successfully pulled image "polinux/stress" in 1.269s (1.269s including waiting). Image size: 4041495 bytes.
+  Normal   Pulled     27m                 kubelet            spec.containers{memory-hog}: Successfully pulled image "polinux/stress" in 1.285s (1.286s including waiting). Image size: 4041495 bytes.
+  Normal   Pulled     26m                 kubelet            spec.containers{memory-hog}: Successfully pulled image "polinux/stress" in 1.24s (1.24s including waiting). Image size: 4041495 bytes.
+  Normal   Created    24m (x6 over 27m)   kubelet            spec.containers{memory-hog}: Container created
+  Normal   Started    24m (x6 over 27m)   kubelet            spec.containers{memory-hog}: Container started
+  Normal   Pulled     24m                 kubelet            spec.containers{memory-hog}: Successfully pulled image "polinux/stress" in 1.294s (1.294s including waiting). Image size: 4041495 bytes.
+  Normal   Pulled     22m                 kubelet            spec.containers{memory-hog}: Successfully pulled image "polinux/stress" in 1.282s (1.282s including waiting). Image size: 4041495 bytes.
+  Normal   Pulling    88s (x11 over 28m)  kubelet            spec.containers{memory-hog}: Pulling image "polinux/stress"
+  Warning  BackOff    85s (x27 over 27m)  kubelet            spec.containers{memory-hog}: Back-off restarting failed container memory-hog in pod oom-demo_default(625b202a-c944-4696-a476-2bca0f40d24a)

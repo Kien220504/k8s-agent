@@ -1,0 +1,53 @@
+Name:             bad-image
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             kind-control-plane/172.18.0.2
+Start Time:       Fri, 23 Oct 2026 13:54:23 +0000
+Labels:           <none>
+Annotations:      <none>
+Status:           Pending
+IP:               10.244.0.5
+IPs:
+  IP:  10.244.0.5
+Containers:
+  web:
+    Container ID:   
+    Image:          nginx:tag-nonexistence
+    Image ID:       
+    Port:           <none>
+    Host Port:      <none>
+    State:          Waiting
+      Reason:       ImagePullBackOff
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-zxlzr (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-zxlzr:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                   From               Message
+  ----     ------     ----                  ----               -------
+  Normal   Scheduled  28m                   default-scheduler  Successfully assigned default/bad-image to kind-control-plane
+  Warning  Failed     25m (x5 over 28m)     kubelet            spec.containers{web}: Failed to pull image "nginx:tag-nonexistence": rpc error: code = NotFound desc = failed to pull and unpack image "docker.io/library/nginx:tag-nonexistence": failed to resolve reference "docker.io/library/nginx:tag-nonexistence": docker.io/library/nginx:tag-nonexistence: not found
+  Warning  Failed     25m (x5 over 28m)     kubelet            spec.containers{web}: Error: ErrImagePull
+  Normal   Pulling    22m (x6 over 28m)     kubelet            spec.containers{web}: Pulling image "nginx:tag-nonexistence"
+  Normal   BackOff    3m2s (x106 over 28m)  kubelet            spec.containers{web}: Back-off pulling image "nginx:tag-nonexistence"
+  Warning  Failed     3m2s (x106 over 28m)  kubelet            spec.containers{web}: Error: ImagePullBackOff

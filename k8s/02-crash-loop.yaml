@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+    name: crash-loop
+spec:
+    containers:
+      - name: app
+        image: busybox:1.36
+        command: ["sh", "-c", "echo 'Initializing... ERROR: Missing parameter DATABASE_URL'; exit 1"]
