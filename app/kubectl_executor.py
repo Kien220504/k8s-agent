@@ -9,13 +9,18 @@ class KubectlError(Exception):
 def run_kubectl(args: list[str], timeout: int = 15) -> str:
     if not args or args[0] not in ALLOWED_COMMANDS:
         raise KubectlError(f"Invalid command(s): {args[:1]}")
-    
-    result = subprocess.run(
-        ["kubectl", *args],
-        capture_output=True,
-        text=True,
-        timeout=timeout,
-    )
+
+    try:
+        result = subprocess.run(
+            ["kubectl", *args],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+    except subprocess.TimeoutExpired:
+        raise KubectlError(f"kubectl timeout ({timeout}s).")
+    except FileNotFoundError:
+        raise KubectlError("kubectl not found.")
 
     if result.returncode != 0:
         raise KubectlError(result.stderr.strip())
