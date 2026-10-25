@@ -24,9 +24,16 @@ def inspect_pods(namespace: str = "default") -> list[dict]:
                 {
                     "name": c["name"],
                     "image": c.get("image"),
+                    "command": c.get("command"),
+                    "args": c.get("args"),
+                    "env_names": [e["name"] for e in c.get("env", [])],
                     "resources": c.get("resources", {}),
                 }
                 for c in pod.get("spec", {}).get("containers", [])
+            ],
+            "owners": [
+                {"kind": o.get("kind"), "name": o.get("name")}
+                for o in pod["metadata"].get("ownerReferences", [])
             ],
         }
         for cs in status.get("containerStatuses", []):
