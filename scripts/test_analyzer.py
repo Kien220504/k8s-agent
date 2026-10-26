@@ -1,3 +1,5 @@
+import yaml
+
 from app.ai_analyzer import AnalysisError, analyze
 from app.event_inspector import collect_events
 from app.logs_collector import collect_logs
@@ -6,6 +8,7 @@ from app.pod_inspector import inspect_pods, is_unhealthy
 EXPECTED = {
     "bad-image": "ImagePullBackOff",
     "crash-loop": "CrashLoopBackOff",
+    "crash-loop-2": "CrashLoopBackOff",
     "oom-demo": "OOMKilled",
     "pending-demo": "Pending",
 }
@@ -37,5 +40,12 @@ for pod in inspect_pods():
     print(f"    Evidence       : {result.evidence_used}")
     print(f"  Fix command(s)   : {result.fix_commands}")
     print(f"  Corrected YAML   :\n{result.corrected_manifest}")
+
+    try:
+        yaml.safe_load(result.corrected_manifest) if result.corrected_manifest else None
+        yaml_ok = "valid" if result.corrected_manifest else "invalid"
+    except yaml.YAMLError:
+        yaml_ok = "SYNTAX ERROR"
+    print(f"  YAML checking    : {yaml_ok}")
 
 print(f"RESULT: {correct}/{total}")

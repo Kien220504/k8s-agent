@@ -2,6 +2,7 @@ import os
 import json
 import re
 import time
+import sys
 from typing import Literal
 
 from dotenv import load_dotenv
@@ -42,6 +43,11 @@ Rules:
   corrected_manifest and apply it with "kubectl apply -f corrected.yaml".
 - Values only a human can know (real secrets, URLs) must be written as
   <REPLACE_ME>. Never fabricate them.
+- Use <REPLACE_ME> ONLY for secrets, credentials, hostnames or URLs that only a
+  human can know. For tunable values (resource sizes, image tags, replica
+  counts) choose a concrete value, justify it in fix_explanation, and keep the
+  YAML valid for "kubectl apply". Never leave a placeholder in an image or
+  numeric field. Pin image tags to a specific version, never "latest".
 - fix_commands are shown to a human and are never executed automatically.
   Prefer read-only or minimal changes.
 
@@ -98,20 +104,28 @@ TRANSIENT = (
     openai.InternalServerError,
 )
 
+class EmptyResponse(Exception):
+    """Responsed successfully but no content found."""
+
 def _call_llm(client, messages):
     last_error = None
     for model in [MODEL, *FALLBACK_MODELS]:
         for attempts in range(3):
             try:
-                return client.chat.completions.create(
+                resp = client.chat.completions.create(
                     model=model,
                     messages=messages,
                     temperature=0.2,
                     max_tokens=3000,
                     timeout=90,
                 )
-            except TRANSIENT as e:
+                if not resp.choices:
+                    detail = resp.model_dump().get("error") or "Responses do not contain 'choices'"
+                    raise EmptyResponse(str(detail))
+                return resp
+            except (*TRANSIENT, EmptyResponse) as e:
                 last_error = e
+                print(f"[Retry] {model} {attempts + 1} attempt(s): {e}", file=sys.stderr)
                 time.sleep(2 ** attempts)
     raise AnalysisError(f"AI cannot response, temporary ERROR: {last_error}")
 
