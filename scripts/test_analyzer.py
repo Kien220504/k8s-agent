@@ -39,6 +39,7 @@ for pod in inspect_pods():
     print(f"    Root cause     : {result.root_cause}")
     print(f"    Evidence       : {result.evidence_used}")
     print(f"  Fix command(s)   : {result.fix_commands}")
+    print(f"  Fix confidence   : {result.fix_confidence}%")
     print(f"  Corrected YAML   :\n{result.corrected_manifest}")
 
     try:

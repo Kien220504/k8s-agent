@@ -50,7 +50,15 @@ Rules:
   numeric field. Pin image tags to a specific version, never "latest".
 - fix_commands are shown to a human and are never executed automatically.
   Prefer read-only or minimal changes.
-
+- Check the evidence for contradictions. If the obvious explanation conflicts
+  with the spec (for example logs say a variable is missing but env_names
+  already contains it), say so, lower the confidence below 70, and recommend
+  inspecting the application's own code or logs instead of repeating the fix.
+- Before proposing a fix, ask whether the change would actually alter the
+  failing code path. If the command or entrypoint would fail regardless of the
+  change, say the fix is unlikely to work.
+- Do not claim certainty about a fix you cannot verify.
+  
 Write root_cause and fix_explanation in English. Keep JSON keys, category
 values and kubectl commands in English.
 
@@ -62,7 +70,8 @@ Reply with ONE JSON object and nothing else, with exactly these keys:
   "fix_explanation": "<what to change and why>",
   "fix_commands": ["<kubectl command or YAML change>"],
   "corrected_manifest": "<complete corrected Pod YAML, or an empty string if no manifest is needed>",
-  "confidence": <integer 0-100>
+  "confidence": <integer 0-100>,
+  "fix_confidence": <integer 0-100: how sure you are that the fix will resolve the problem>
 }
 Use "category" CrashLoopBackOff only for application crashes. If the last
 termination reason is OOMKilled, use OOMKilled even when the current state is
@@ -76,6 +85,7 @@ class Diagnosis(BaseModel):
     fix_commands: list[str]
     corrected_manifest: str = ""
     confidence: int = Field(ge=0, le=100)
+    fix_confidence: int | None = Field(default=None, ge=0, le=100)
     model: str | None = None
 
 class AnalysisError(Exception):
@@ -96,7 +106,7 @@ def _extract_json(text: str) -> dict:
         raise ValueError("Cannot find JSON in AI answer.")
     return json.loads(match.group(0), strict=False)
 
-FALLBACK_MODELS = [m for m in os.environ.get("OPENROUTER_FALLBACK_MODELS", "").split(",") if m]
+FALLBACK_MODELS = [m.strip() for m in os.environ.get("OPENROUTER_FALLBACK_MODELS", "").split(",") if m.strip()]
 
 TRANSIENT = (
     openai.APIConnectionError,
@@ -116,7 +126,7 @@ def _call_llm(client, messages):
                     model=model,
                     messages=messages,
                     temperature=0.2,
-                    max_tokens=3000,
+                    max_tokens=10000,
                     timeout=90,
                 )
                 if not resp.choices:
@@ -159,5 +169,10 @@ def analyze(evidence: dict, max_attempts: str = 2) -> Diagnosis:
                     "content": f"Your reply was invalid: {last_error}. Reply with ONE valid JSON object only.",
                 },
             ]
+            print(
+                f"[Error JSON] {e} | finish_reason={resp.choices[0].finish_reason}\n"
+                f"--- First 600 characters ---\n{text[:600]}",
+                file=sys.stderr,
+            )
 
     raise AnalysisError(f"AI cannot ouput valid JSON after {max_attempts} attempts: {last_error}")
